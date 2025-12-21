@@ -1,0 +1,6 @@
+*.o
+*.e
+*.zip
+nohup.out
+a.out
+*/
