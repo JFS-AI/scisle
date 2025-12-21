@@ -6,17 +6,13 @@
 
 using namespace std;
 
-long long sq(long long l) {
-	return l*l;
-}
-
 struct punkt {
 	int x, y;
 };
 
 struct przedzial {
 	punkt l, r;
-	double jakosc; // do kwadratu
+	double jakosc;
 };
 
 static_assert(sizeof(punkt) == 8);
