@@ -8,6 +8,7 @@ using namespace std;
 
 struct punkt {
 	int x, y;
+	int index;
 };
 
 struct przedzial {
@@ -15,8 +16,8 @@ struct przedzial {
 	double jakosc;
 };
 
-static_assert(sizeof(punkt) == 8);
-static_assert(sizeof(przedzial) == 24);
+static_assert(sizeof(punkt) == 12);
+static_assert(sizeof(przedzial) == 32);
 
 int n, U;
 vector<przedzial> v;
@@ -37,7 +38,7 @@ public:
 			maksima.pop_front();
 		q.pop();
 	}
-	bool is_bushable(punkt p) {
+	bool is_pushable(punkt p) {
 		return p.y <= minima.front() + U && p.y >= maksima.front() - U;
 	}
 	void push(punkt p) {
@@ -59,11 +60,17 @@ public:
 
 		q.push(p);
 	}
-
 };
 
 int main() {
 	cin >> n >> U;
 
+	kolejka_kmax k;
+	for(int i = 0; i < n; i++) {
+		int x, y;
+		cin >> x >> y;
+		k.push({x, y, i});
+	}
+	
 	return 0;
 }
