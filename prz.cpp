@@ -23,12 +23,12 @@ static_assert(sizeof(przedzial) == 32);
 int U;
 vector<przedzial> v;
 
-class kolejka_kminmax {
+class KolejkaKMinMax {
 	queue<punkt> q;
 	deque<int> minima, maksima;
 
 public:
-	void wrzuc_przedzial_do_vectora() {
+	void wrzucPrzedzialDoVec() {
 		assert(q.size());
 		v.push_back({q.front(), q.back(), (q.back().x - q.front().x) / sqrt(q.size())});
 	}
@@ -44,7 +44,7 @@ public:
 			maksima.pop_front();
 		q.pop();
 	}
-	bool is_pushable(punkt p) { // badamy czy kolejny punkt bedzie wciaz tworzyl dobry przedzial
+	bool isPushable(punkt p) { // badamy czy kolejny punkt bedzie wciaz tworzyl dobry przedzial
 		return (minima.empty() || p.y <= minima.front() + U) && (maksima.empty() || p.y >= maksima.front() - U);
 	}
 	void push(punkt p) {
@@ -63,7 +63,7 @@ public:
 };
 
 
-class kolejka_kmax2 { // zrobilem cos strasznego
+class KolejkaKMax2 { // zrobilem cos strasznego
 	queue<pair<przedzial, int>> q;
 	deque<pair<double, int>> maksima;
 
@@ -101,24 +101,24 @@ int main() {
 	int n;
 	cin >> n >> U;
 	vector<punkt> tab(n);
-	kolejka_kminmax k;
+	KolejkaKMinMax k;
 	for(int i = 0; i < n; i++) {
-		punkt p({0,0,i});
+		punkt p = {0, 0, i};
 		cin >> p.x >> p.y;
 		tab.push_back(p);
-		if(!k.is_pushable(p)) {
-			k.wrzuc_przedzial_do_vectora();
-			while(!k.is_pushable(p))
+		if(!k.isPushable(p)) {
+			k.wrzucPrzedzialDoVec();
+			while(!k.isPushable(p))
 				k.pop();
 		}
 		k.push(p);
 	}
-	k.wrzuc_przedzial_do_vectora(); // bo trzeba
+	k.wrzucPrzedzialDoVec(); // bo trzeba
 
 	assert(v[0].l.index == 0);
 	assert(v[v.size() - 1].r.index == n-1);
 	int index_first_to_push = 0, index_first_to_pop = 0;
-	kolejka_kmax2 k2;
+	KolejkaKMax2 k2;
 	for(int i = 0; i < n; i++) {
 		if(index_first_to_push < static_cast<int>(v.size()) && i == v[index_first_to_push].l.index)
 			k2.push(v[index_first_to_push++]);
