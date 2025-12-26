@@ -81,9 +81,9 @@ public:
 		while(maksima.size() && p.jakosc > maksima.back().first) 
 			maksima.pop_back();
 
-		maksima.push_back({p.jakosc, i++});
-
+		maksima.push_back({p.jakosc, i});
 		q.push({p, i});
+		i++;
 	}
 	pair<int, int> najlepszy() {
 		assert(maksima.size());
