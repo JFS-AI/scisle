@@ -100,12 +100,10 @@ ostream& operator<<(ostream& os, const pair<int, int>& p) {
 int main() {
 	int n;
 	cin >> n >> U;
-	vector<punkt> tab(n);
 	KolejkaKMinMax k;
 	for(int i = 0; i < n; i++) {
 		punkt p = {0, 0, i};
 		cin >> p.x >> p.y;
-		tab.push_back(p);
 		if(!k.isPushable(p)) {
 			k.wrzucPrzedzialDoVec();
 			while(!k.isPushable(p))
