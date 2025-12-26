@@ -20,7 +20,7 @@ struct przedzial {
 static_assert(sizeof(punkt) == 12);
 static_assert(sizeof(przedzial) == 32);
 
-int n, U;
+int U;
 vector<przedzial> v;
 
 class kolejka_kminmax {
@@ -98,6 +98,7 @@ ostream& operator<<(ostream& os, const pair<int, int>& p) {
 }
 
 int main() {
+	int n;
 	cin >> n >> U;
 	vector<punkt> tab(n);
 	kolejka_kminmax k;
