@@ -3,7 +3,7 @@
 #include <vector>
 #include <cassert>
 #include <iostream>
-#include <math.h>
+#include <cmath>
 
 using namespace std;
 
