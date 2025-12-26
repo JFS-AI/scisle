@@ -76,7 +76,7 @@ public:
 			maksima.pop_front();
 		q.pop();
 	}
-	void push(przedzial p) {
+	void push(const przedzial& p) {
 		static int i = 0;
 		while(maksima.size() && p.jakosc > maksima.back().first) 
 			maksima.pop_back();
