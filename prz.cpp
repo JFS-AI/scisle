@@ -63,7 +63,7 @@ public:
 };
 
 
-class KolejkaKMax2 { // zrobilem cos strasznego
+class KolejkaKMax2 { // zrobilem cos strasznego (DRY placze)
 	queue<pair<przedzial, int>> q;
 	deque<pair<double, int>> maksima;
 
@@ -88,7 +88,7 @@ public:
 	pair<int, int> najlepszy() {
 		assert(maksima.size());
 		przedzial p = v[maksima.front().second];
-		return {p.l.index + 1, p.r.index + 1};
+		return {p.l.index + 1, p.r.index + 1}; // poniewaz liczymy od 1 (nie od 0)
 	}
 };
 
