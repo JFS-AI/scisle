@@ -27,10 +27,14 @@ class KolejkaKMinMax {
 	queue<punkt> q;
 	deque<int> minima, maksima;
 
+	double policz_jakosc() { // jakosc podnosze do kwadratu, aby uniknac pierwiastka
+		return pow(q.back().x - q.front().x, 2) / static_cast<double>(q.size());
+	}
+
 public:
 	void wrzucPrzedzialDoVec() {
 		assert(q.size());
-		v.push_back({q.front(), q.back(), (q.back().x - q.front().x) / sqrt(q.size())});
+		v.emplace_back(q.front(), q.back(), policz_jakosc());
 	}
 	void pop() {
 		assert(q.size());
@@ -81,8 +85,8 @@ public:
 		while(maksima.size() && p.jakosc > maksima.back().first) 
 			maksima.pop_back();
 
-		maksima.push_back({p.jakosc, i});
-		q.push({p, i});
+		maksima.emplace_back(p.jakosc, i);
+		q.emplace(p, i);
 		i++;
 	}
 	pair<int, int> najlepszy() {
