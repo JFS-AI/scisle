@@ -6,7 +6,7 @@
 #include <cmath>
 
 using namespace std;
-
+//niga
 struct punkt {
 	int x, y;
 	int index;
