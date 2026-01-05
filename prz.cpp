@@ -20,6 +20,7 @@ struct przedzial {
 static_assert(sizeof(punkt) == 12);
 static_assert(sizeof(przedzial) == 32); // wywal to nigga
 
+
 int U;
 vector<przedzial> v;
 
@@ -89,17 +90,13 @@ public:
 		q.emplace(p, i);
 		i++;
 	}
-	pair<int, int> najlepszy() {
+	void wypiszNajlepszy() {
 		assert(maksima.size());
 		przedzial p = v[maksima.front().second];
-		return {p.l.index + 1, p.r.index + 1}; // poniewaz liczymy od 1 (nie od 0)
+		cout << p.l.index + 1 << " " << p.r.index + 1 << "\n"; // poniewaz liczymy od 1 (nie od 0)
 	}
 };
 
-ostream& operator<<(ostream& os, const pair<int, int>& p) {
-    os << p.first << " " << p.second;
-    return os;
-}
 
 int main() {	// za długie nigga
 	int n;
@@ -125,7 +122,7 @@ int main() {	// za długie nigga
 		if(index_first_to_push < static_cast<int>(v.size()) && i == v[index_first_to_push].l.index)
 			k2.push(v[index_first_to_push++]);
 
-		cout << k2.najlepszy() << "\n";
+		k2.wypiszNajlepszy();
 
 		if(index_first_to_pop < static_cast<int>(v.size()) && i == v[index_first_to_pop].r.index) {
 			k2.pop();
