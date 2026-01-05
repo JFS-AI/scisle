@@ -21,10 +21,11 @@ static_assert(sizeof(punkt) == 12);
 static_assert(sizeof(przedzial) == 32); // wywal to nigga
 
 
-int U;
+
 vector<przedzial> v;
 
 class KolejkaKMinMax {
+	const int U;
 	queue<punkt> q;
 	deque<int> minima, maksima;
 
@@ -33,6 +34,7 @@ class KolejkaKMinMax {
 	}
 
 public:
+	KolejkaKMinMax(int x) : U(x) {}
 	void wrzucPrzedzialDoVec() {
 		assert(q.size());
 		v.emplace_back(q.front(), q.back(), policzJakosc());
@@ -99,16 +101,17 @@ public:
 
 
 int main() {	// za długie nigga
-	int n;
-	cin >> n >> U;
-	KolejkaKMinMax k;
+	int n, u;
+	cin >> n >> u;
+	KolejkaKMinMax k(u);
 	for(int i = 0; i < n; i++) {
 		punkt p = {0, 0, i};
 		cin >> p.x >> p.y;
 		if(!k.isPushable(p)) {
-			k.wrzucPrzedzialDoVec();		// nie rób tego w tej pętli nigga
-			while(!k.isPushable(p))			// wywal to do osobnej funkcji nigga
+			k.wrzucPrzedzialDoVec(); // wrzucic do funkcji
+			do
 				k.pop();
+			while(!k.isPushable(p));
 		}
 		k.push(p);
 	}
