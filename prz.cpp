@@ -6,7 +6,7 @@
 #include <cmath>
 
 using namespace std;
-//niga
+
 struct punkt {
 	int x, y;
 	int index;
@@ -18,7 +18,7 @@ struct przedzial {
 };
 
 static_assert(sizeof(punkt) == 12);
-static_assert(sizeof(przedzial) == 32);
+static_assert(sizeof(przedzial) == 32); // wywal to nigga
 
 int U;
 vector<przedzial> v;
@@ -67,7 +67,7 @@ public:
 };
 
 
-class KolejkaKMax2 { // zrobilem cos strasznego (DRY placze)
+class KolejkaKMax2 { // zrobilem cos strasznego (DRY placze)		//nazwij to lepiej nigga
 	queue<pair<przedzial, int>> q;
 	deque<pair<double, int>> maksima;
 
@@ -101,7 +101,7 @@ ostream& operator<<(ostream& os, const pair<int, int>& p) {
     return os;
 }
 
-int main() {
+int main() {	// za długie nigga
 	int n;
 	cin >> n >> U;
 	KolejkaKMinMax k;
@@ -109,8 +109,8 @@ int main() {
 		punkt p = {0, 0, i};
 		cin >> p.x >> p.y;
 		if(!k.isPushable(p)) {
-			k.wrzucPrzedzialDoVec();
-			while(!k.isPushable(p))
+			k.wrzucPrzedzialDoVec();		// nie rób tego w tej pętli nigga
+			while(!k.isPushable(p))			// wywal to do osobnej funkcji nigga
 				k.pop();
 		}
 		k.push(p);
