@@ -68,7 +68,7 @@ public:
 };
 
 
-class KolejkaKMax2 { // zrobilem cos strasznego (DRY placze)		//nazwij to lepiej nigga
+class KolejkaKMax2 { // zrobilem cos strasznego (DRY placze (w teorii))		//nazwij to lepiej nigga
 	struct Element {
 		double jakosc;
 		int id;
