@@ -60,15 +60,15 @@ public:
 
 class KolejkaKMinMax { // nie lepiej połączyć tą klasę z KolejkaPrzedzialy? nigga
 	queue<punkt> q;
-	MonotonicznaDeque<int, less_equal<int>> minima;
-	MonotonicznaDeque<int, greater_equal<int>> maksima;
+	MonotonicznaDeque<int, less<int>> minima;
+	MonotonicznaDeque<int, greater<int>> maksima;
 
 	double policzJakosc() const { // jakosc podnosze do kwadratu, aby uniknac pierwiastka
 		return pow(q.back().x - q.front().x, 2) / static_cast<double>(q.size());
 	}
 
 public:
-	KolejkaKMinMax(int x) : minima(less_equal<int>{}, -x), maksima(greater_equal<int>{}, x) {}
+	KolejkaKMinMax(int x) : minima(less<int>{}, -x), maksima(greater<int>{}, x) {}
 
 	void wrzucPrzedzialDoVec(vector<przedzial>& v) const {
 		assert(q.size());
@@ -127,6 +127,7 @@ punkt wczytajPunkt() {
 vector<przedzial> wygenerujPrzedzialy(int n) {
 	int u;
 	cin >> u;
+	u++; // przydaloby sie slowo komentarza
 	KolejkaKMinMax k(u);
 	vector<przedzial> v;
 	for(int i = 0; i < n; i++) {
