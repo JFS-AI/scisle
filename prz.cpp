@@ -145,19 +145,19 @@ int main() {	// za długie nigga
 	assert(scislePrzedzialy[0].l.index == 0);
 	assert(scislePrzedzialy[rozmiarVektora - 1].r.index == n-1);
 
-	int index_first_to_push = 0, index_first_to_pop = 0;
-	KolejkaKMax2 k2(scislePrzedzialy);
+	int indexFirstToPush = 0, indexFirstToPop = 0;
+	KolejkaKMax2 kolejka(scislePrzedzialy);
 	for(int i = 0; i < n; i++) {
-		if(index_first_to_push < rozmiarVektora && i == scislePrzedzialy[index_first_to_push].l.index) {
-			k2.push();
-			index_first_to_push++;
+		if(indexFirstToPush < rozmiarVektora && i == scislePrzedzialy[indexFirstToPush].l.index) {
+			kolejka.push();
+			indexFirstToPush++;
 		}
 
-		k2.wypiszNajlepszy();
+		kolejka.wypiszNajlepszy();
 
-		if(index_first_to_pop < rozmiarVektora && i == scislePrzedzialy[index_first_to_pop].r.index) {
-			k2.pop();
-			index_first_to_pop++;
+		if(indexFirstToPop < rozmiarVektora && i == scislePrzedzialy[indexFirstToPop].r.index) {
+			kolejka.pop();
+			indexFirstToPop++;
 		}
 	}
 	return 0;
