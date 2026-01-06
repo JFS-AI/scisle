@@ -100,7 +100,7 @@ public:
 		assert(koniecGasienicy <= poczatekGasienicy);
 		int dlugosc = poczatekGasienicy - koniecGasienicy + 1;
 		int dx = v[koniecGasienicy].x - v[poczatekGasienicy].x;
-		double jakosc = (dx * dx) / static_cast<double>(dlugosc);
+		double jakosc = pow(dx, 2) / static_cast<double>(dlugosc);
 		vecPrzedzialow.emplace_back(v[koniecGasienicy], v[poczatekGasienicy], jakosc);
 	}
 };
