@@ -24,7 +24,7 @@ static_assert(sizeof(przedzial) == 32);
 
 template <typename T, typename Komparator>
 requires predicate<Komparator, T, T>
-class MonotnicznaDeque {
+class MonotonicznaDeque {
 	struct Element {
 		T wart;
 		int id;
@@ -35,7 +35,7 @@ class MonotnicznaDeque {
 	const int U;
 
 public:
-	MonotnicznaDeque(Komparator k, int u = 0) : komp(k), U(u) {}
+	MonotonicznaDeque(Komparator k, int u = 0) : komp(k), U(u) {}
 
 	int topId() const {
 		assert(dq.size());
@@ -58,8 +58,8 @@ public:
 
 class KolejkaKMinMax {
 	queue<punkt> q;
-	MonotnicznaDeque<int, less_equal<int>> minima;
-	MonotnicznaDeque<int, greater_equal<int>> maksima;
+	MonotonicznaDeque<int, less_equal<int>> minima;
+	MonotonicznaDeque<int, greater_equal<int>> maksima;
 
 	double policzJakosc() const { // jakosc podnosze do kwadratu, aby uniknac pierwiastka
 		return pow(q.back().x - q.front().x, 2) / static_cast<double>(q.size());
@@ -94,7 +94,7 @@ public:
 
 class KolejkaKMax2 { // zrobilem cos strasznego (DRY placze (w teorii))		//nazwij to lepiej nigga
 	int poczatekGasienicy = -1, koniecGasienicy = 0;
-	MonotnicznaDeque<double, greater<double>> maksima;
+	MonotonicznaDeque<double, greater<double>> maksima;
 	const vector<przedzial>& v;
 
 public:
