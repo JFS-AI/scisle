@@ -24,7 +24,7 @@ static_assert(sizeof(przedzial) == 32);
 
 template <typename T, typename Komparator>
 requires predicate<Komparator, T, T>
-class MonotnicznaDeque {
+class MonotnicznaDeque {	// polski język trudny język nigga
 	struct Element {
 		T wart;
 		int id;
@@ -51,12 +51,14 @@ public:
 		if(id == topId())
 			dq.pop_front();
 	}
-	bool isPushable(T t) const {
+	bool isPushable(T t) const { // jakies wyjasnienie co to robi w komentarzu?
+								 // w kolejnej klasie masz funkcję z tą samą nazwą ale robiącą coś innego
+								 // confusing af nigga
 		return dq.empty() || komp(t, dq.front().wart - U);
 	}
 };
 
-class KolejkaKMinMax {
+class KolejkaKMinMax { // nie lepiej połączyć tą klasę z KolejkaPrzedzialy? nigga
 	queue<punkt> q;
 	MonotnicznaDeque<int, less_equal<int>> minima;
 	MonotnicznaDeque<int, greater_equal<int>> maksima;
@@ -92,13 +94,13 @@ public:
 };
 
 
-class KolejkaKMax2 { // zrobilem cos strasznego (DRY placze (w teorii))		//nazwij to lepiej nigga
+class KolejkaPrzedzialy { // zrobilem cos strasznego (DRY placze (w teorii))  // zmieniłem nazwę klasy na coś bardziej sensownego nigga
 	int poczatekGasienicy = -1, koniecGasienicy = 0;
 	MonotnicznaDeque<double, greater<double>> maksima;
 	const vector<przedzial>& v;
 
 public:
-	KolejkaKMax2(const vector<przedzial>& x) : maksima(greater<double>{}), v(x) {}
+	KolejkaPrzedzialy(const vector<przedzial>& x) : maksima(greater<double>{}), v(x) {}
 
 	void pop() {
 		assert(koniecGasienicy <= poczatekGasienicy);
@@ -128,7 +130,7 @@ vector<przedzial> wygenerujPrzedzialy(int n) {
 	KolejkaKMinMax k(u);
 	vector<przedzial> v;
 	for(int i = 0; i < n; i++) {
-		const punkt p = wczytajPunkt();
+		const punkt p = wczytajPunkt();			// nigga wczytujemy w osobnej funkcji
 		if(!k.isPushable(p)) {
 			k.wrzucPrzedzialDoVec(v);
 			do
@@ -156,7 +158,7 @@ int main() {	// za długie nigga
 	assert(scislePrzedzialy[rozmiarVektora - 1].r.index == n-1);
 
 	int indexFirstToPush = 0, indexFirstToPop = 0;
-	KolejkaKMax2 kolejka(scislePrzedzialy);
+	KolejkaPrzedzialy kolejka(scislePrzedzialy);  // daj jakiś komentarz co się tu dzieje nigga
 	for(int i = 0; i < n; i++) {
 		if(indexFirstToPush < rozmiarVektora && i == scislePrzedzialy[indexFirstToPush].l.index) {
 			kolejka.push();
