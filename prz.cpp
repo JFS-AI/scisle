@@ -15,12 +15,12 @@ struct punkt {
 };
 
 struct przedzial {
-	punkt l, r;
+	int l, r;
 	double jakosc;
 };
 
 static_assert(sizeof(punkt) == 12);
-static_assert(sizeof(przedzial) == 32);
+static_assert(sizeof(przedzial) == 16);
 
 template <typename T, typename Komparator>
 requires strict_weak_order<Komparator, T, T>
@@ -93,14 +93,14 @@ public:
 	}
 	void wypiszNajlepszyPrzedzial() const {
 		const przedzial& p = v[maksima.topId()];
-		cout << p.l.index + 1 << " " << p.r.index + 1 << "\n"; // poniewaz liczymy od 1 (nie od 0)
+		cout << p.l + 1 << " " << p.r + 1 << "\n"; // poniewaz liczymy od 1 (nie od 0)
 	}
 	void wrzucPrzedzialDoVec(vector<przedzial>& vecPrzedzialow) const { // jakosc podnosze do kwadratu, aby uniknac pierwiastka
 		assert(L <= R);
 		int dlugosc = R - L + 1;
 		long long dx = v[R].x - v[L].x;
 		double jakosc = pow(dx, 2) / static_cast<double>(dlugosc);
-		vecPrzedzialow.emplace_back(v[L], v[R], jakosc);
+		vecPrzedzialow.emplace_back(L, R, jakosc);
 	}
 };
 
@@ -143,20 +143,20 @@ int main() {	// za długie nigga
 	
 	const int rozmiarVektora = static_cast<int>(scislePrzedzialy.size());
 
-	assert(scislePrzedzialy[0].l.index == 0);
-	assert(scislePrzedzialy[rozmiarVektora - 1].r.index == n-1);
+	assert(scislePrzedzialy[0].l == 0);
+	assert(scislePrzedzialy[rozmiarVektora - 1].r == n-1);
 
 	int indexFirstToPush = 0, indexFirstToPop = 0;
 	KolejkaPrzedzialy<przedzial> kolejka(scislePrzedzialy);  // daj jakiś komentarz co się tu dzieje nigga
 	for(int i = 0; i < n; i++) {
-		if(indexFirstToPush < rozmiarVektora && i == scislePrzedzialy[indexFirstToPush].l.index) {
+		if(indexFirstToPush < rozmiarVektora && i == scislePrzedzialy[indexFirstToPush].l) {
 			kolejka.push();
 			indexFirstToPush++;
 		}
 
 		kolejka.wypiszNajlepszyPrzedzial();
 
-		if(indexFirstToPop < rozmiarVektora && i == scislePrzedzialy[indexFirstToPop].r.index) {
+		if(indexFirstToPop < rozmiarVektora && i == scislePrzedzialy[indexFirstToPop].r) {
 			kolejka.pop();
 			indexFirstToPop++;
 		}
