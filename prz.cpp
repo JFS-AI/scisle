@@ -5,6 +5,7 @@
 #include <iostream>
 #include <functional>
 #include <concepts>
+#include <type_traits>
 #include <cmath>
 
 using namespace std;
@@ -58,62 +59,50 @@ public:
 	}
 };
 
-class KolejkaKMinMax { // nie lepiej połączyć tą klasę z KolejkaPrzedzialy? nigga
-	queue<punkt> q;
-	MonotonicznaDeque<int, less<int>> minima;
-	MonotonicznaDeque<int, greater<int>> maksima;
+template<typename T>
+class KolejkaPrzedzialy { // zrobilem cos strasznego (DRY placze (w teorii))  // zmieniłem nazwę klasy na coś bardziej sensownego nigga
+	int poczatekGasienicy = -1, koniecGasienicy = 0;
+	using TypWartosci = conditional_t<is_same_v<T, przedzial>, double, int>;
+	MonotonicznaDeque<TypWartosci, less<TypWartosci>> minima;
+	MonotonicznaDeque<TypWartosci, greater<TypWartosci>> maksima;
+	const vector<T>& v;
 
-	double policzJakosc() const { // jakosc podnosze do kwadratu, aby uniknac pierwiastka
-		return pow(q.back().x - q.front().x, 2) / static_cast<double>(q.size());
-	}
+	TypWartosci pobierzWartosc(const T& p) const {
+        if constexpr (is_same_v<T, przedzial>) {
+            return p.jakosc;
+        } else { // <punkt>
+            return p.y;
+        }
+    }
 
 public:
-	KolejkaKMinMax(int x) : minima(less<int>{}, -x), maksima(greater<int>{}, x) {}
+	KolejkaPrzedzialy(const vector<T>& x, int u = 0) 
+	: minima(less<TypWartosci>{}, -u), maksima(greater<TypWartosci>{}, u), v(x) {}
 
-	void wrzucPrzedzialDoVec(vector<przedzial>& v) const {
-		assert(q.size());
-		v.emplace_back(q.front(), q.back(), policzJakosc());
-	}
 	void pop() {
-		assert(q.size());
-
-		const int& id = q.front().index;
-		minima.pop(id);
-		maksima.pop(id);
-		q.pop();
+		assert(koniecGasienicy <= poczatekGasienicy);
+		minima.pop(koniecGasienicy);
+		maksima.pop(koniecGasienicy);
+		koniecGasienicy++;
 	}
 	bool isPushable(punkt p) const { // badamy czy kolejny punkt bedzie wciaz tworzyl dobry przedzial
 		return minima.isPushable(p.y) && maksima.isPushable(p.y);
 	}
-	void push(punkt p) {
-		minima.push(p.y, p.index);
-		maksima.push(p.y, p.index);
-
-		q.push(p);
-	}
-};
-
-
-class KolejkaPrzedzialy { // zrobilem cos strasznego (DRY placze (w teorii))  // zmieniłem nazwę klasy na coś bardziej sensownego nigga
-	int poczatekGasienicy = -1, koniecGasienicy = 0;
-	MonotonicznaDeque<double, greater<double>> maksima;
-	const vector<przedzial>& v;
-
-public:
-	KolejkaPrzedzialy(const vector<przedzial>& x) : maksima(greater<double>{}), v(x) {}
-
-	void pop() {
-		assert(koniecGasienicy <= poczatekGasienicy);
-		maksima.pop(koniecGasienicy++);	
-	}
 	void push() {
 		poczatekGasienicy++;
-		przedzial p = v[poczatekGasienicy];
-		maksima.push(p.jakosc, poczatekGasienicy);
+		minima.push(pobierzWartosc(v[poczatekGasienicy]), poczatekGasienicy);
+		maksima.push(pobierzWartosc(v[poczatekGasienicy]), poczatekGasienicy);
 	}
-	void wypiszNajlepszy() const {
+	void wypiszNajlepszyPrzedzial() const {
 		const przedzial& p = v[maksima.topId()];
 		cout << p.l.index + 1 << " " << p.r.index + 1 << "\n"; // poniewaz liczymy od 1 (nie od 0)
+	}
+	void wrzucPrzedzialDoVec(vector<przedzial>& vecPrzedzialow) const { // jakosc podnosze do kwadratu, aby uniknac pierwiastka
+		assert(koniecGasienicy <= poczatekGasienicy);
+		int dlugosc = poczatekGasienicy - koniecGasienicy + 1;
+		int dx = v[koniecGasienicy].x - v[poczatekGasienicy].x;
+		double jakosc = (dx * dx) / static_cast<double>(dlugosc);
+		vecPrzedzialow.emplace_back(v[koniecGasienicy], v[poczatekGasienicy], jakosc);
 	}
 };
 
@@ -128,7 +117,7 @@ vector<punkt> wczytajWejscie(int n) {
 }
 
 vector<przedzial> wygenerujPrzedzialy(int u, const vector<punkt>& vecPunktow) {
-	KolejkaKMinMax k(u);
+	KolejkaPrzedzialy<punkt> k(vecPunktow, u);
 	vector<przedzial> vecPrzedzialow;
 	for(punkt p : vecPunktow) {
 		if(!k.isPushable(p)) {
@@ -137,7 +126,7 @@ vector<przedzial> wygenerujPrzedzialy(int u, const vector<punkt>& vecPunktow) {
 				k.pop();
 			while(!k.isPushable(p));
 		}
-		k.push(p);
+		k.push();
 	}
 	k.wrzucPrzedzialDoVec(vecPrzedzialow); // bo trzeba
 
@@ -160,14 +149,14 @@ int main() {	// za długie nigga
 	assert(scislePrzedzialy[rozmiarVektora - 1].r.index == n-1);
 
 	int indexFirstToPush = 0, indexFirstToPop = 0;
-	KolejkaPrzedzialy kolejka(scislePrzedzialy);  // daj jakiś komentarz co się tu dzieje nigga
+	KolejkaPrzedzialy<przedzial> kolejka(scislePrzedzialy);  // daj jakiś komentarz co się tu dzieje nigga
 	for(int i = 0; i < n; i++) {
 		if(indexFirstToPush < rozmiarVektora && i == scislePrzedzialy[indexFirstToPush].l.index) {
 			kolejka.push();
 			indexFirstToPush++;
 		}
 
-		kolejka.wypiszNajlepszy();
+		kolejka.wypiszNajlepszyPrzedzial();
 
 		if(indexFirstToPop < rozmiarVektora && i == scislePrzedzialy[indexFirstToPop].r.index) {
 			kolejka.pop();
