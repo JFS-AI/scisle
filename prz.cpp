@@ -74,28 +74,31 @@ class KolejkaKMax2 { // zrobilem cos strasznego (DRY placze)		//nazwij to lepiej
 		int id;
 	};
 
-	queue<pair<przedzial, int>> q;
+	int poczatekGasienicy = -1, koniecGasienicy = 0;
 	deque<Element> maksima;
+	const vector<przedzial>& v;
 
 public:
+	KolejkaKMax2(const vector<przedzial>& x) : v(x) {}
+
 	void pop() {
-		assert(q.size());
+		assert(koniecGasienicy <= poczatekGasienicy);
 		assert(maksima.size());
 
-		if(q.front().second == maksima.front().id)
+		if(koniecGasienicy == maksima.front().id)
 			maksima.pop_front();
-		q.pop();
+
+		koniecGasienicy++;
 	}
-	void push(const przedzial& p) {
-		static int i = 0;
+	void push() {
+		poczatekGasienicy++;
+		przedzial p = v[poczatekGasienicy];
 		while(maksima.size() && p.jakosc > maksima.back().jakosc) 
 			maksima.pop_back();
 
-		maksima.emplace_back(p.jakosc, i);
-		q.emplace(p, i);
-		i++;
+		maksima.emplace_back(p.jakosc, poczatekGasienicy);
 	}
-	void wypiszNajlepszy(const vector<przedzial>& v) {
+	void wypiszNajlepszy() {
 		assert(maksima.size());
 		przedzial p = v[maksima.front().id];
 		cout << p.l.index + 1 << " " << p.r.index + 1 << "\n"; // poniewaz liczymy od 1 (nie od 0)
@@ -109,38 +112,48 @@ punkt wczytajPunkt() {
 	return {x, y, i++};
 }
 
-int main() {	// za długie nigga
-	ios_base::sync_with_stdio(0); 
-	cin.tie(0);
-
-	int n, u;
-	cin >> n >> u;
-	vector<przedzial> scislePrzedzialy;
+vector<przedzial> wygenerujPrzedzialy(int n) {
+	int u;
+	cin >> u;
 	KolejkaKMinMax k(u);
+	vector<przedzial> v;
 	for(int i = 0; i < n; i++) {
 		punkt p = wczytajPunkt();
 		if(!k.isPushable(p)) {
-			k.wrzucPrzedzialDoVec(scislePrzedzialy); // wrzucic do funkcji
+			k.wrzucPrzedzialDoVec(v);
 			do
 				k.pop();
 			while(!k.isPushable(p));
 		}
 		k.push(p);
 	}
-	k.wrzucPrzedzialDoVec(scislePrzedzialy); // bo trzeba
+	k.wrzucPrzedzialDoVec(v); // bo trzeba
 
+	return v;
+}
+
+int main() {	// za długie nigga
+	ios_base::sync_with_stdio(0); 
+	cin.tie(0);
+
+	int n;
+	cin >> n;
+	vector<przedzial> scislePrzedzialy = wygenerujPrzedzialy(n); // (sic!) nie robi kopii
+	
 	int rozmiarVektora = static_cast<int>(scislePrzedzialy.size());
 
 	assert(scislePrzedzialy[0].l.index == 0);
 	assert(scislePrzedzialy[rozmiarVektora - 1].r.index == n-1);
 
 	int index_first_to_push = 0, index_first_to_pop = 0;
-	KolejkaKMax2 k2;
+	KolejkaKMax2 k2(scislePrzedzialy);
 	for(int i = 0; i < n; i++) {
-		if(index_first_to_push < rozmiarVektora && i == scislePrzedzialy[index_first_to_push].l.index)
-			k2.push(scislePrzedzialy[index_first_to_push++]);
+		if(index_first_to_push < rozmiarVektora && i == scislePrzedzialy[index_first_to_push].l.index) {
+			k2.push();
+			index_first_to_push++;
+		}
 
-		k2.wypiszNajlepszy(scislePrzedzialy);
+		k2.wypiszNajlepszy();
 
 		if(index_first_to_pop < rozmiarVektora && i == scislePrzedzialy[index_first_to_pop].r.index) {
 			k2.pop();
