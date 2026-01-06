@@ -69,21 +69,26 @@ public:
 
 
 class KolejkaKMax2 { // zrobilem cos strasznego (DRY placze)		//nazwij to lepiej nigga
+	struct Element {
+		double jakosc;
+		int id;
+	};
+
 	queue<pair<przedzial, int>> q;
-	deque<pair<double, int>> maksima;
+	deque<Element> maksima;
 
 public:
 	void pop() {
 		assert(q.size());
 		assert(maksima.size());
 
-		if(q.front().second == maksima.front().second)
+		if(q.front().second == maksima.front().id)
 			maksima.pop_front();
 		q.pop();
 	}
 	void push(const przedzial& p) {
 		static int i = 0;
-		while(maksima.size() && p.jakosc > maksima.back().first) 
+		while(maksima.size() && p.jakosc > maksima.back().jakosc) 
 			maksima.pop_back();
 
 		maksima.emplace_back(p.jakosc, i);
@@ -92,7 +97,7 @@ public:
 	}
 	void wypiszNajlepszy(const vector<przedzial>& v) {
 		assert(maksima.size());
-		przedzial p = v[maksima.front().second];
+		przedzial p = v[maksima.front().id];
 		cout << p.l.index + 1 << " " << p.r.index + 1 << "\n"; // poniewaz liczymy od 1 (nie od 0)
 	}
 };
