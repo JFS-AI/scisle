@@ -52,15 +52,13 @@ public:
 		if(id == topId())
 			dq.pop_front();
 	}
-	bool isPushable(T t) const { // jakies wyjasnienie co to robi w komentarzu?
-								 // w kolejnej klasie masz funkcję z tą samą nazwą ale robiącą coś innego
-								 // confusing af nigga
+	bool isPushable(T t) const { // sprawdza czy kolejny punkt jest wiekszy od maksimum minus U
 		return dq.empty() || komp(t, dq.front().wart - U);
 	}
 };
 
 template<typename T>
-class KolejkaPrzedzialy { // zrobilem cos strasznego (DRY placze (w teorii))  // zmieniłem nazwę klasy na coś bardziej sensownego nigga
+class KolejkaPrzedzialy { // trzeba nazwe zmienic
 	int poczatekGasienicy = -1, koniecGasienicy = 0;
 	using TypWartosci = conditional_t<is_same_v<T, przedzial>, double, int>;
 	MonotonicznaDeque<TypWartosci, less<TypWartosci>> minima;
