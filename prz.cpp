@@ -18,7 +18,7 @@ struct przedzial {
 };
 
 static_assert(sizeof(punkt) == 12);
-static_assert(sizeof(przedzial) == 32); // wywal to nigga
+static_assert(sizeof(przedzial) == 32);
 
 
 class KolejkaKMinMax {
