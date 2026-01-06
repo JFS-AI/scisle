@@ -23,7 +23,7 @@ static_assert(sizeof(punkt) == 12);
 static_assert(sizeof(przedzial) == 32);
 
 template <typename T, typename Komparator>
-requires predicate<Komparator, T, T>
+requires strict_weak_order<Komparator, T, T>
 class MonotonicznaDeque {
 	struct Element {
 		T wart;
