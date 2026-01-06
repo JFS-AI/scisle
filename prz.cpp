@@ -21,8 +21,6 @@ static_assert(sizeof(punkt) == 12);
 static_assert(sizeof(przedzial) == 32); // wywal to nigga
 
 
-vector<przedzial> scislePrzedzialy;
-
 class KolejkaKMinMax {
 	const int U;
 	queue<punkt> q;
@@ -34,9 +32,9 @@ class KolejkaKMinMax {
 
 public:
 	KolejkaKMinMax(int x) : U(x) {}
-	void wrzucPrzedzialDoVec() {
+	void wrzucPrzedzialDoVec(vector<przedzial>& v) {
 		assert(q.size());
-		scislePrzedzialy.emplace_back(q.front(), q.back(), policzJakosc());
+		v.emplace_back(q.front(), q.back(), policzJakosc());
 	}
 	void pop() {
 		assert(q.size());
@@ -91,9 +89,9 @@ public:
 		q.emplace(p, i);
 		i++;
 	}
-	void wypiszNajlepszy() {
+	void wypiszNajlepszy(const vector<przedzial>& v) {
 		assert(maksima.size());
-		przedzial p = scislePrzedzialy[maksima.front().second];
+		przedzial p = v[maksima.front().second];
 		cout << p.l.index + 1 << " " << p.r.index + 1 << "\n"; // poniewaz liczymy od 1 (nie od 0)
 	}
 };
@@ -102,19 +100,20 @@ public:
 int main() {	// za długie nigga
 	int n, u;
 	cin >> n >> u;
+	vector<przedzial> scislePrzedzialy;
 	KolejkaKMinMax k(u);
 	for(int i = 0; i < n; i++) {
 		punkt p = {0, 0, i};
 		cin >> p.x >> p.y;
 		if(!k.isPushable(p)) {
-			k.wrzucPrzedzialDoVec(); // wrzucic do funkcji
+			k.wrzucPrzedzialDoVec(scislePrzedzialy); // wrzucic do funkcji
 			do
 				k.pop();
 			while(!k.isPushable(p));
 		}
 		k.push(p);
 	}
-	k.wrzucPrzedzialDoVec(); // bo trzeba
+	k.wrzucPrzedzialDoVec(scislePrzedzialy); // bo trzeba
 
 	assert(scislePrzedzialy[0].l.index == 0);
 	assert(scislePrzedzialy[scislePrzedzialy.size() - 1].r.index == n-1);
@@ -124,7 +123,7 @@ int main() {	// za długie nigga
 		if(index_first_to_push < static_cast<int>(scislePrzedzialy.size()) && i == scislePrzedzialy[index_first_to_push].l.index)
 			k2.push(scislePrzedzialy[index_first_to_push++]);
 
-		k2.wypiszNajlepszy();
+		k2.wypiszNajlepszy(scislePrzedzialy);
 
 		if(index_first_to_pop < static_cast<int>(scislePrzedzialy.size()) && i == scislePrzedzialy[index_first_to_pop].r.index) {
 			k2.pop();
