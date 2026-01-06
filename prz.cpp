@@ -20,6 +20,36 @@ struct przedzial {
 static_assert(sizeof(punkt) == 12);
 static_assert(sizeof(przedzial) == 32);
 
+template <typename T, typename Komparator>
+requires predicate<Komparator, T, T>
+class MonotnicznaDeque {
+	struct Element {
+		T wart;
+		int id;
+	};
+
+	const int U;
+	deque<Element> maksima;
+	Komparator komp;
+
+public:
+	MonotnicznaDeque(int u, Komparator k) : U(u), komp(k) {}
+
+	void push(T t, int id) {
+		while(maksima.size() && komp(t, maksima.back().wart)) 
+			maksima.pop_back();
+
+		maksima.emplace_back(t, id);
+	}
+	void pop(int id) {
+		assert(maksima.size());
+		if(id == maksima.front().id)
+			maksima.pop_front();
+	}
+	bool isPushable(T t) const {
+		return maksima.empty() || komp(t, maksima.front() - U);
+	}
+};
 
 class KolejkaKMinMax {
 	const int U;
