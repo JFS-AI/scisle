@@ -117,41 +117,42 @@ public:
 	}
 };
 
-punkt wczytajPunkt() {
-	static int i = 0;
-	int x, y;
-	cin >> x >> y;
-	return {x, y, i++};
+vector<punkt> wczytajWejscie(int n) {
+	vector<punkt> v(n);
+	v.resize(n);
+	for(int i = 0; i < n; i++) {
+		cin >> v[i].x >> v[i].y;
+		v[i].index = i;
+	}
+	return v;
 }
 
-vector<przedzial> wygenerujPrzedzialy(int n) {
-	int u;
-	cin >> u;
-	u++; // przydaloby sie slowo komentarza
+vector<przedzial> wygenerujPrzedzialy(int u, const vector<punkt>& vecPunktow) {
 	KolejkaKMinMax k(u);
-	vector<przedzial> v;
-	for(int i = 0; i < n; i++) {
-		const punkt p = wczytajPunkt();			// nigga wczytujemy w osobnej funkcji
+	vector<przedzial> vecPrzedzialow;
+	for(punkt p : vecPunktow) {
 		if(!k.isPushable(p)) {
-			k.wrzucPrzedzialDoVec(v);
+			k.wrzucPrzedzialDoVec(vecPrzedzialow);
 			do
 				k.pop();
 			while(!k.isPushable(p));
 		}
 		k.push(p);
 	}
-	k.wrzucPrzedzialDoVec(v); // bo trzeba
+	k.wrzucPrzedzialDoVec(vecPrzedzialow); // bo trzeba
 
-	return v;
+	return vecPrzedzialow;
 }
 
 int main() {	// za długie nigga
 	ios_base::sync_with_stdio(0); 
 	cin.tie(0);
 
-	int n;
-	cin >> n;
-	vector<przedzial> scislePrzedzialy = wygenerujPrzedzialy(n); // (sic!) nie robi kopii
+	int n, u;
+	cin >> n >> u;
+	u++; // przydaloby sie slowo komentarza
+	vector<punkt> punkty = wczytajWejscie(n);
+	vector<przedzial> scislePrzedzialy = wygenerujPrzedzialy(u, punkty); // (sic!) nie robi kopii
 	
 	const int rozmiarVektora = static_cast<int>(scislePrzedzialy.size());
 
