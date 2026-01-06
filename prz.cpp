@@ -30,12 +30,12 @@ class MonotnicznaDeque {
 		int id;
 	};
 
-	const int U;
 	deque<Element> dq;
 	Komparator komp;
+	const int U = 0;
 
 public:
-	MonotnicznaDeque(int u, Komparator k) : U(u), komp(k) {}
+	MonotnicznaDeque(Komparator k, int u) : komp(k), U(u) {}
 
 	void push(T t, int id) {
 		while(dq.size() && komp(t, dq.back().wart)) 
@@ -63,7 +63,7 @@ class KolejkaKMinMax {
 	}
 
 public:
-	KolejkaKMinMax(int x) : minima(-x, less_equal<int>{}), maksima(x, greater_equal<int>{}) {}
+	KolejkaKMinMax(int x) : minima(less_equal<int>{}, -x), maksima(greater_equal<int>{}, x) {}
 
 	void wrzucPrzedzialDoVec(vector<przedzial>& v) const {
 		assert(q.size());
@@ -97,6 +97,7 @@ class KolejkaKMax2 { // zrobilem cos strasznego (DRY placze (w teorii))		//nazwi
 
 	int poczatekGasienicy = -1, koniecGasienicy = 0;
 	deque<Element> maksima;
+	//MonotnicznaDeque<double, 
 	const vector<przedzial>& v;
 
 public:
