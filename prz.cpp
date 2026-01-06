@@ -26,7 +26,7 @@ class KolejkaKMinMax {
 	queue<punkt> q;
 	deque<int> minima, maksima;
 
-	double policzJakosc() { // jakosc podnosze do kwadratu, aby uniknac pierwiastka
+	double policzJakosc() const { // jakosc podnosze do kwadratu, aby uniknac pierwiastka
 		return pow(q.back().x - q.front().x, 2) / static_cast<double>(q.size());
 	}
 
