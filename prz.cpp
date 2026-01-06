@@ -3,6 +3,8 @@
 #include <vector>
 #include <cassert>
 #include <iostream>
+#include <functional>
+#include <concepts>
 #include <cmath>
 
 using namespace std;
@@ -29,39 +31,39 @@ class MonotnicznaDeque {
 	};
 
 	const int U;
-	deque<Element> maksima;
+	deque<Element> dq;
 	Komparator komp;
 
 public:
 	MonotnicznaDeque(int u, Komparator k) : U(u), komp(k) {}
 
 	void push(T t, int id) {
-		while(maksima.size() && komp(t, maksima.back().wart)) 
-			maksima.pop_back();
+		while(dq.size() && komp(t, dq.back().wart)) 
+			dq.pop_back();
 
-		maksima.emplace_back(t, id);
+		dq.emplace_back(t, id);
 	}
 	void pop(int id) {
-		assert(maksima.size());
-		if(id == maksima.front().id)
-			maksima.pop_front();
+		assert(dq.size());
+		if(id == dq.front().id)
+			dq.pop_front();
 	}
 	bool isPushable(T t) const {
-		return maksima.empty() || komp(t, maksima.front() - U);
+		return dq.empty() || komp(t, dq.front().wart - U);
 	}
 };
 
 class KolejkaKMinMax {
-	const int U;
 	queue<punkt> q;
-	deque<int> minima, maksima;
+	MonotnicznaDeque<int, less_equal<int>> minima;
+	MonotnicznaDeque<int, greater_equal<int>> maksima;
 
 	double policzJakosc() const { // jakosc podnosze do kwadratu, aby uniknac pierwiastka
 		return pow(q.back().x - q.front().x, 2) / static_cast<double>(q.size());
 	}
 
 public:
-	KolejkaKMinMax(int x) : U(x) {}
+	KolejkaKMinMax(int x) : minima(-x, less_equal<int>{}), maksima(x, greater_equal<int>{}) {}
 
 	void wrzucPrzedzialDoVec(vector<przedzial>& v) const {
 		assert(q.size());
@@ -69,29 +71,18 @@ public:
 	}
 	void pop() {
 		assert(q.size());
-		assert(minima.size());
-		assert(maksima.size());
 
-		const int& y = q.front().y;
-		if(y == minima.front())
-			minima.pop_front();
-		if(y == maksima.front())
-			maksima.pop_front();
+		const int& id = q.front().index;
+		minima.pop(id);
+		maksima.pop(id);
 		q.pop();
 	}
 	bool isPushable(punkt p) const { // badamy czy kolejny punkt bedzie wciaz tworzyl dobry przedzial
-		return (minima.empty() || p.y <= minima.front() + U) && (maksima.empty() || p.y >= maksima.front() - U);
+		return minima.isPushable(p.y) && maksima.isPushable(p.y);
 	}
 	void push(punkt p) {
-		while(minima.size() && p.y < minima.back()) 
-			minima.pop_back();
-
-		minima.push_back(p.y);
-
-		while(maksima.size() && p.y > maksima.back()) 
-			maksima.pop_back();
-
-		maksima.push_back(p.y);
+		minima.push(p.y, p.index);
+		maksima.push(p.y, p.index);
 
 		q.push(p);
 	}
