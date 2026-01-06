@@ -49,6 +49,7 @@ public:
 		dq.emplace_back(t, id);
 	}
 	void pop(int id) {
+		assert(dq.size());
 		if(id == topId())
 			dq.pop_front();
 	}
