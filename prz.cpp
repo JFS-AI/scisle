@@ -98,6 +98,9 @@ public:
 
 
 int main() {	// za długie nigga
+	ios_base::sync_with_stdio(0); 
+	cin.tie(0);
+	
 	int n, u;
 	cin >> n >> u;
 	vector<przedzial> scislePrzedzialy;
@@ -118,14 +121,15 @@ int main() {	// za długie nigga
 	assert(scislePrzedzialy[0].l.index == 0);
 	assert(scislePrzedzialy[scislePrzedzialy.size() - 1].r.index == n-1);
 	int index_first_to_push = 0, index_first_to_pop = 0;
+	int rozmiarVektora = static_cast<int>(scislePrzedzialy.size());
 	KolejkaKMax2 k2;
 	for(int i = 0; i < n; i++) {
-		if(index_first_to_push < static_cast<int>(scislePrzedzialy.size()) && i == scislePrzedzialy[index_first_to_push].l.index)
+		if(index_first_to_push < rozmiarVektora && i == scislePrzedzialy[index_first_to_push].l.index)
 			k2.push(scislePrzedzialy[index_first_to_push++]);
 
 		k2.wypiszNajlepszy(scislePrzedzialy);
 
-		if(index_first_to_pop < static_cast<int>(scislePrzedzialy.size()) && i == scislePrzedzialy[index_first_to_pop].r.index) {
+		if(index_first_to_pop < rozmiarVektora && i == scislePrzedzialy[index_first_to_pop].r.index) {
 			k2.pop();
 			index_first_to_pop++;
 		}
