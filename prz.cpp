@@ -32,11 +32,15 @@ class MonotnicznaDeque {
 
 	deque<Element> dq;
 	Komparator komp;
-	const int U = 0;
+	const int U;
 
 public:
-	MonotnicznaDeque(Komparator k, int u) : komp(k), U(u) {}
+	MonotnicznaDeque(Komparator k, int u = 0) : komp(k), U(u) {}
 
+	int topId() const {
+		assert(dq.size());
+		return dq.front().id;
+	}
 	void push(T t, int id) {
 		while(dq.size() && komp(t, dq.back().wart)) 
 			dq.pop_back();
@@ -44,8 +48,7 @@ public:
 		dq.emplace_back(t, id);
 	}
 	void pop(int id) {
-		assert(dq.size());
-		if(id == dq.front().id)
+		if(id == topId())
 			dq.pop_front();
 	}
 	bool isPushable(T t) const {
@@ -90,39 +93,24 @@ public:
 
 
 class KolejkaKMax2 { // zrobilem cos strasznego (DRY placze (w teorii))		//nazwij to lepiej nigga
-	struct Element {
-		double jakosc;
-		int id;
-	};
-
 	int poczatekGasienicy = -1, koniecGasienicy = 0;
-	deque<Element> maksima;
-	//MonotnicznaDeque<double, 
+	MonotnicznaDeque<double, greater<double>> maksima;
 	const vector<przedzial>& v;
 
 public:
-	KolejkaKMax2(const vector<przedzial>& x) : v(x) {}
+	KolejkaKMax2(const vector<przedzial>& x) : maksima(greater<double>{}), v(x) {}
 
 	void pop() {
 		assert(koniecGasienicy <= poczatekGasienicy);
-		assert(maksima.size());
-
-		if(koniecGasienicy == maksima.front().id)
-			maksima.pop_front();
-
-		koniecGasienicy++;
+		maksima.pop(koniecGasienicy++);	
 	}
 	void push() {
 		poczatekGasienicy++;
 		przedzial p = v[poczatekGasienicy];
-		while(maksima.size() && p.jakosc > maksima.back().jakosc) 
-			maksima.pop_back();
-
-		maksima.emplace_back(p.jakosc, poczatekGasienicy);
+		maksima.push(p.jakosc, poczatekGasienicy);
 	}
 	void wypiszNajlepszy() const {
-		assert(maksima.size());
-		const przedzial& p = v[maksima.front().id];
+		const przedzial& p = v[maksima.topId()];
 		cout << p.l.index + 1 << " " << p.r.index + 1 << "\n"; // poniewaz liczymy od 1 (nie od 0)
 	}
 };
