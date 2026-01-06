@@ -59,7 +59,7 @@ public:
 
 template<typename T>
 class KolejkaPrzedzialy { // trzeba nazwe zmienic
-	int poczatekGasienicy = -1, koniecGasienicy = 0;
+	int R = -1, L = 0;
 	using TypWartosci = conditional_t<is_same_v<T, przedzial>, double, int>;
 	MonotonicznaDeque<TypWartosci, less<TypWartosci>> minima;
 	MonotonicznaDeque<TypWartosci, greater<TypWartosci>> maksima;
@@ -78,29 +78,29 @@ public:
 	: minima(less<TypWartosci>{}, -u), maksima(greater<TypWartosci>{}, u), v(x) {}
 
 	void pop() {
-		assert(koniecGasienicy <= poczatekGasienicy);
-		minima.pop(koniecGasienicy);
-		maksima.pop(koniecGasienicy);
-		koniecGasienicy++;
+		assert(L <= R);
+		minima.pop(L);
+		maksima.pop(L);
+		L++;
 	}
 	bool isPushable(punkt p) const { // badamy czy kolejny punkt bedzie wciaz tworzyl dobry przedzial
 		return minima.isPushable(p.y) && maksima.isPushable(p.y);
 	}
 	void push() {
-		poczatekGasienicy++;
-		minima.push(pobierzWartosc(v[poczatekGasienicy]), poczatekGasienicy);
-		maksima.push(pobierzWartosc(v[poczatekGasienicy]), poczatekGasienicy);
+		R++;
+		minima.push(pobierzWartosc(v[R]), R);
+		maksima.push(pobierzWartosc(v[R]), R);
 	}
 	void wypiszNajlepszyPrzedzial() const {
 		const przedzial& p = v[maksima.topId()];
 		cout << p.l.index + 1 << " " << p.r.index + 1 << "\n"; // poniewaz liczymy od 1 (nie od 0)
 	}
 	void wrzucPrzedzialDoVec(vector<przedzial>& vecPrzedzialow) const { // jakosc podnosze do kwadratu, aby uniknac pierwiastka
-		assert(koniecGasienicy <= poczatekGasienicy);
-		int dlugosc = poczatekGasienicy - koniecGasienicy + 1;
-		int dx = v[koniecGasienicy].x - v[poczatekGasienicy].x;
+		assert(L <= R);
+		int dlugosc = R - L + 1;
+		long long dx = v[R].x - v[L].x;
 		double jakosc = pow(dx, 2) / static_cast<double>(dlugosc);
-		vecPrzedzialow.emplace_back(v[koniecGasienicy], v[poczatekGasienicy], jakosc);
+		vecPrzedzialow.emplace_back(v[L], v[R], jakosc);
 	}
 };
 
