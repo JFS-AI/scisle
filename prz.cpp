@@ -32,6 +32,7 @@ class KolejkaKMinMax {
 
 public:
 	KolejkaKMinMax(int x) : U(x) {}
+
 	void wrzucPrzedzialDoVec(vector<przedzial>& v) {
 		assert(q.size());
 		v.emplace_back(q.front(), q.back(), policzJakosc());
@@ -96,18 +97,23 @@ public:
 	}
 };
 
+punkt wczytajPunkt() {
+	static int i = 0;
+	int x, y;
+	cin >> x >> y;
+	return {x, y, i++};
+}
 
 int main() {	// za długie nigga
 	ios_base::sync_with_stdio(0); 
 	cin.tie(0);
-	
+
 	int n, u;
 	cin >> n >> u;
 	vector<przedzial> scislePrzedzialy;
 	KolejkaKMinMax k(u);
 	for(int i = 0; i < n; i++) {
-		punkt p = {0, 0, i};
-		cin >> p.x >> p.y;
+		punkt p = wczytajPunkt();
 		if(!k.isPushable(p)) {
 			k.wrzucPrzedzialDoVec(scislePrzedzialy); // wrzucic do funkcji
 			do
@@ -118,10 +124,12 @@ int main() {	// za długie nigga
 	}
 	k.wrzucPrzedzialDoVec(scislePrzedzialy); // bo trzeba
 
-	assert(scislePrzedzialy[0].l.index == 0);
-	assert(scislePrzedzialy[scislePrzedzialy.size() - 1].r.index == n-1);
-	int index_first_to_push = 0, index_first_to_pop = 0;
 	int rozmiarVektora = static_cast<int>(scislePrzedzialy.size());
+
+	assert(scislePrzedzialy[0].l.index == 0);
+	assert(scislePrzedzialy[rozmiarVektora - 1].r.index == n-1);
+
+	int index_first_to_push = 0, index_first_to_pop = 0;
 	KolejkaKMax2 k2;
 	for(int i = 0; i < n; i++) {
 		if(index_first_to_push < rozmiarVektora && i == scislePrzedzialy[index_first_to_push].l.index)
