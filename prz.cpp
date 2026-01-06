@@ -33,7 +33,7 @@ class KolejkaKMinMax {
 public:
 	KolejkaKMinMax(int x) : U(x) {}
 
-	void wrzucPrzedzialDoVec(vector<przedzial>& v) {
+	void wrzucPrzedzialDoVec(vector<przedzial>& v) const {
 		assert(q.size());
 		v.emplace_back(q.front(), q.back(), policzJakosc());
 	}
@@ -42,14 +42,14 @@ public:
 		assert(minima.size());
 		assert(maksima.size());
 
-		int y = q.front().y;
+		const int& y = q.front().y;
 		if(y == minima.front())
 			minima.pop_front();
 		if(y == maksima.front())
 			maksima.pop_front();
 		q.pop();
 	}
-	bool isPushable(punkt p) { // badamy czy kolejny punkt bedzie wciaz tworzyl dobry przedzial
+	bool isPushable(punkt p) const { // badamy czy kolejny punkt bedzie wciaz tworzyl dobry przedzial
 		return (minima.empty() || p.y <= minima.front() + U) && (maksima.empty() || p.y >= maksima.front() - U);
 	}
 	void push(punkt p) {
@@ -98,9 +98,9 @@ public:
 
 		maksima.emplace_back(p.jakosc, poczatekGasienicy);
 	}
-	void wypiszNajlepszy() {
+	void wypiszNajlepszy() const {
 		assert(maksima.size());
-		przedzial p = v[maksima.front().id];
+		const przedzial& p = v[maksima.front().id];
 		cout << p.l.index + 1 << " " << p.r.index + 1 << "\n"; // poniewaz liczymy od 1 (nie od 0)
 	}
 };
@@ -118,7 +118,7 @@ vector<przedzial> wygenerujPrzedzialy(int n) {
 	KolejkaKMinMax k(u);
 	vector<przedzial> v;
 	for(int i = 0; i < n; i++) {
-		punkt p = wczytajPunkt();
+		const punkt p = wczytajPunkt();
 		if(!k.isPushable(p)) {
 			k.wrzucPrzedzialDoVec(v);
 			do
@@ -140,7 +140,7 @@ int main() {	// za długie nigga
 	cin >> n;
 	vector<przedzial> scislePrzedzialy = wygenerujPrzedzialy(n); // (sic!) nie robi kopii
 	
-	int rozmiarVektora = static_cast<int>(scislePrzedzialy.size());
+	const int rozmiarVektora = static_cast<int>(scislePrzedzialy.size());
 
 	assert(scislePrzedzialy[0].l.index == 0);
 	assert(scislePrzedzialy[rozmiarVektora - 1].r.index == n-1);
