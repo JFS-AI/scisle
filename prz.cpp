@@ -21,8 +21,7 @@ static_assert(sizeof(punkt) == 12);
 static_assert(sizeof(przedzial) == 32); // wywal to nigga
 
 
-
-vector<przedzial> v;
+vector<przedzial> scislePrzedzialy;
 
 class KolejkaKMinMax {
 	const int U;
@@ -37,7 +36,7 @@ public:
 	KolejkaKMinMax(int x) : U(x) {}
 	void wrzucPrzedzialDoVec() {
 		assert(q.size());
-		v.emplace_back(q.front(), q.back(), policzJakosc());
+		scislePrzedzialy.emplace_back(q.front(), q.back(), policzJakosc());
 	}
 	void pop() {
 		assert(q.size());
@@ -94,7 +93,7 @@ public:
 	}
 	void wypiszNajlepszy() {
 		assert(maksima.size());
-		przedzial p = v[maksima.front().second];
+		przedzial p = scislePrzedzialy[maksima.front().second];
 		cout << p.l.index + 1 << " " << p.r.index + 1 << "\n"; // poniewaz liczymy od 1 (nie od 0)
 	}
 };
@@ -117,17 +116,17 @@ int main() {	// za długie nigga
 	}
 	k.wrzucPrzedzialDoVec(); // bo trzeba
 
-	assert(v[0].l.index == 0);
-	assert(v[v.size() - 1].r.index == n-1);
+	assert(scislePrzedzialy[0].l.index == 0);
+	assert(scislePrzedzialy[scislePrzedzialy.size() - 1].r.index == n-1);
 	int index_first_to_push = 0, index_first_to_pop = 0;
 	KolejkaKMax2 k2;
 	for(int i = 0; i < n; i++) {
-		if(index_first_to_push < static_cast<int>(v.size()) && i == v[index_first_to_push].l.index)
-			k2.push(v[index_first_to_push++]);
+		if(index_first_to_push < static_cast<int>(scislePrzedzialy.size()) && i == scislePrzedzialy[index_first_to_push].l.index)
+			k2.push(scislePrzedzialy[index_first_to_push++]);
 
 		k2.wypiszNajlepszy();
 
-		if(index_first_to_pop < static_cast<int>(v.size()) && i == v[index_first_to_pop].r.index) {
+		if(index_first_to_pop < static_cast<int>(scislePrzedzialy.size()) && i == scislePrzedzialy[index_first_to_pop].r.index) {
 			k2.pop();
 			index_first_to_pop++;
 		}
