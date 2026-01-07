@@ -6,6 +6,7 @@
 #include <concepts>
 #include <type_traits>
 #include <cmath>
+#include <cstdio>
 
 using namespace std;
 
@@ -21,6 +22,33 @@ struct przedzial {
 
 static_assert(sizeof(punkt) == 12);
 static_assert(sizeof(przedzial) == 16);
+
+inline void fastWrite(int number) {
+    if (number == 0) {
+        putchar_unlocked('0');
+        return;
+    }
+
+    char buffer[12]; // Bufor na cyfry (int mieści się w 10 cyfrach + znak)
+    int i = 0;
+
+    // Wyciąganie cyfr od końca
+    while (number > 0) {
+        buffer[i++] = static_cast<char>(number % 10) + '0';
+        number /= 10;
+    }
+
+    // Wypisanie bufora w dobrej kolejności
+    while (i > 0) {
+        putchar_unlocked(buffer[--i]);
+    }
+}
+inline void fastWritePair(int n1, int n2) {
+	fastWrite(n1);
+	putchar_unlocked(' ');
+	fastWrite(n2);
+	putchar_unlocked('\n');
+}
 
 template <typename T, typename Komparator>
 requires strict_weak_order<Komparator, T, T>
@@ -93,7 +121,8 @@ public:
 	}
 	void wypiszNajlepszyPrzedzial() const {
 		const przedzial& p = v[maksima.topId()];
-		cout << p.l + 1 << " " << p.r + 1 << "\n"; // poniewaz liczymy od 1 (nie od 0)
+		fastWritePair(p.l + 1, p.r + 1);
+		//cout << p.l + 1 << " " << p.r + 1 << "\n"; // poniewaz liczymy od 1 (nie od 0)
 	}
 	void wrzucPrzedzialDoVec(vector<przedzial>& vecPrzedzialow) const { // jakosc podnosze do kwadratu, aby uniknac pierwiastka
 		assert(L <= R);
@@ -104,11 +133,31 @@ public:
 	}
 };
 
+inline void fastRead(int &number) {
+	int c;
+    number = 0;
+
+    // Pomiń białe znaki (spacje, newlines)
+    c = getchar_unlocked();
+    while (c < '0' || c > '9') {
+		if(c == -1) return;
+        c = getchar_unlocked();
+    }
+
+    // Wczytaj cyfry
+    while (c >= '0' && c <= '9') {
+        number = (number * 10) + (c - '0');
+        c = getchar_unlocked();
+    }
+}
+
+
 vector<punkt> wczytajWejscie(int n) {
 	vector<punkt> v(n);
 	v.resize(n);
 	for(int i = 0; i < n; i++) {
-		cin >> v[i].x >> v[i].y;
+		fastRead(v[i].x);
+		fastRead(v[i].y);
 		v[i].index = i;
 	}
 	return v;
@@ -132,8 +181,8 @@ vector<przedzial> wygenerujPrzedzialy(int u, const vector<punkt>& vecPunktow) {
 }
 
 int main() {	// za długie nigga
-	ios_base::sync_with_stdio(0); 
-	cin.tie(0);
+	//ios_base::sync_with_stdio(0); 
+	//cin.tie(0);
 
 	int n, u;
 	cin >> n >> u;
