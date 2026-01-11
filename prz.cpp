@@ -99,11 +99,12 @@ public:
 };
 
 vector<punkt> wczytajWejscie(int n) {
-	vector<punkt> v(n);
-	v.resize(n);
+	vector<punkt> v;
+	v.reserve(n);
 	for(int i = 0; i < n; i++) {
-		cin >> v[i].x >> v[i].y;
-		v[i].index = i;
+		int x, y;
+		cin >> x >> y;
+		v.emplace_back(x, y, i);
 	}
 	return v;
 }
