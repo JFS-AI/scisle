@@ -37,7 +37,7 @@ class MonotonicznaDeque {
 	const int U;
 
 public:
-	MonotonicznaDeque(Komparator k, int u = 0) : komp(k), U(u) {}
+	explicit MonotonicznaDeque(Komparator k, int u = 0) : komp(k), U(u) {}
 
 	int topId() const {
 		assert(dq.size());
@@ -68,7 +68,7 @@ class KolejkaPrzedzialy { // trzeba nazwe zmienic
 	const vector<T>& v;
 
 public:
-	KolejkaPrzedzialy(const vector<T>& x, int u = 0) 
+	explicit KolejkaPrzedzialy(const vector<T>& x, int u = 0) 
 	: minima(less<TypWartosci>{}, -u), maksima(greater<TypWartosci>{}, u), v(x) {}
 
 	void pop() {
