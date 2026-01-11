@@ -12,11 +12,13 @@ using namespace std;
 struct punkt {
 	int x, y;
 	int index;
+	const auto wartoscDoPorownan() const { return y; }
 };
 
 struct przedzial {
 	int l, r;
 	double jakosc;
+	const auto wartoscDoPorownan() const { return jakosc; }
 };
 
 static_assert(sizeof(punkt) == 12);
@@ -60,18 +62,10 @@ public:
 template<typename T>
 class KolejkaPrzedzialy { // trzeba nazwe zmienic
 	int R = -1, L = 0;
-	using TypWartosci = conditional_t<is_same_v<T, przedzial>, double, int>;
+	using TypWartosci = decltype(declval<T>().wartoscDoPorownan());
 	MonotonicznaDeque<TypWartosci, less<TypWartosci>> minima;
 	MonotonicznaDeque<TypWartosci, greater<TypWartosci>> maksima;
 	const vector<T>& v;
-
-	TypWartosci pobierzWartosc(const T& p) const {
-        if constexpr (is_same_v<T, przedzial>) {
-            return p.jakosc;
-        } else { // <punkt>
-            return p.y;
-        }
-    }
 
 public:
 	KolejkaPrzedzialy(const vector<T>& x, int u = 0) 
@@ -88,8 +82,8 @@ public:
 	}
 	void push() {
 		R++;
-		minima.push(pobierzWartosc(v[R]), R);
-		maksima.push(pobierzWartosc(v[R]), R);
+		minima.push(v[R].wartoscDoPorownan(), R);
+		maksima.push(v[R].wartoscDoPorownan(), R);
 	}
 	void wypiszNajlepszyPrzedzial() const {
 		const przedzial& p = v[maksima.topId()];
@@ -131,7 +125,7 @@ vector<przedzial> wygenerujPrzedzialy(int u, const vector<punkt>& vecPunktow) {
 	return vecPrzedzialow;
 }
 
-int main() {	// za długie nigga
+int main() {	// za długie
 	ios_base::sync_with_stdio(0); 
 	cin.tie(0);
 
@@ -147,7 +141,7 @@ int main() {	// za długie nigga
 	assert(scislePrzedzialy[rozmiarVektora - 1].r == n-1);
 
 	int indexFirstToPush = 0, indexFirstToPop = 0;
-	KolejkaPrzedzialy<przedzial> kolejka(scislePrzedzialy);  // daj jakiś komentarz co się tu dzieje nigga
+	KolejkaPrzedzialy<przedzial> kolejka(scislePrzedzialy);  // daj jakiś komentarz co się tu dzieje
 	for(int i = 0; i < n; i++) {
 		if(indexFirstToPush < rozmiarVektora && i == scislePrzedzialy[indexFirstToPush].l) {
 			kolejka.push();
