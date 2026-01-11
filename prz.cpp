@@ -11,7 +11,6 @@ using namespace std;
 
 struct punkt {
 	int x, y;
-	int index;
 	const auto wartoscDoPorownan() const { return y; }
 };
 
@@ -21,7 +20,7 @@ struct przedzial {
 	const auto wartoscDoPorownan() const { return jakosc; }
 };
 
-static_assert(sizeof(punkt) == 12);
+static_assert(sizeof(punkt) == 8);
 static_assert(sizeof(przedzial) == 16);
 
 template <typename T, typename Komparator>
@@ -104,7 +103,7 @@ vector<punkt> wczytajWejscie(int n) {
 	for(int i = 0; i < n; i++) {
 		int x, y;
 		cin >> x >> y;
-		v.emplace_back(x, y, i);
+		v.emplace_back(x, y);
 	}
 	return v;
 }
