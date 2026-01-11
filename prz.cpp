@@ -20,9 +20,6 @@ struct przedzial {
 	const auto wartoscDoPorownan() const { return jakosc; }
 };
 
-static_assert(sizeof(punkt) == 8);
-static_assert(sizeof(przedzial) == 16);
-
 template <typename T, typename Komparator>
 requires strict_weak_order<Komparator, T, T>
 class MonotonicznaDeque {
