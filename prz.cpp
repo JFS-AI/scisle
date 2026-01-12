@@ -22,13 +22,13 @@ struct przedzial {
 
 template <typename T, typename Komparator>
 requires strict_weak_order<Komparator, T, T>
-class MonotonicznaDeque {
+class MonotonicznaDeque { // MW jakiś komentarz jak działa ta klasa?
 	struct Element {
 		T wart;
 		int id;
 	};
 
-	deque<Element> dq;
+	deque<Element> dq; 
 	Komparator komp;
 	const int U;
 
@@ -39,7 +39,7 @@ public:
 		assert(dq.size());
 		return dq.front().id;
 	}
-	void push(T t, int id) {
+	void push(T t, int id) { /// MW jednoliterowe nazwy 
 		while(dq.size() && komp(t, dq.back().wart)) 
 			dq.pop_back();
 
@@ -56,8 +56,8 @@ public:
 };
 
 template<typename T>
-class KolejkaPrzedzialy { // trzeba nazwe zmienic
-	int R = -1, L = 0;
+class KolejkaPrzedzialy { // trzeba nazwe zmienic // MW już nie trzeba
+	int R = -1, L = 0; // MW ditto, komentarz jak działa ta klasa
 	using TypWartosci = decltype(declval<T>().wartoscDoPorownan());
 	MonotonicznaDeque<TypWartosci, less<TypWartosci>> minima;
 	MonotonicznaDeque<TypWartosci, greater<TypWartosci>> maksima;
@@ -97,16 +97,16 @@ public:
 
 vector<punkt> wczytajWejscie(int n) {
 	vector<punkt> v;
-	v.reserve(n);
+	v.reserve(n); // MW nie lepiej po prostu zrobić vector<punkt> v(n); ?
 	for(int i = 0; i < n; i++) {
 		int x, y;
-		cin >> x >> y;
+		cin >> x >> y; // MW a tutaj cin >> v[i].x >> v[i].y;
 		v.emplace_back(x, y);
 	}
 	return v;
 }
 
-vector<przedzial> wygenerujPrzedzialy(int u, const vector<punkt>& vecPunktow) {
+vector<przedzial> wygenerujPrzedzialy(int u, const vector<punkt>& vecPunktow) { // MW jakiś komentarz po co to
 	KolejkaPrzedzialy<punkt> k(vecPunktow, u);
 	vector<przedzial> vecPrzedzialow;
 	for(punkt p : vecPunktow) {
