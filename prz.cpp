@@ -50,7 +50,7 @@ public:
 		if(id == topId())
 			dq.pop_front();
 	}
-	bool isPushable(T t) const { // sprawdza czy kolejny punkt jest wiekszy od maksimum minus U
+	bool isPushable(T t) const { // sprawdza czy kolejny punkt jest większy od maksimum minus U
 		return dq.empty() || komp(t, dq.front().wart - U);
 	}
 };
@@ -73,7 +73,7 @@ public:
 		maksima.pop(L);
 		L++;
 	}
-	bool isPushable(punkt p) const { // badamy czy kolejny punkt bedzie wciaz tworzyl dobry przedzial
+	bool isPushable(punkt p) const { // badamy czy kolejny punkt będzie wciąż tworzył dobry przedział
 		return minima.isPushable(p.y) && maksima.isPushable(p.y);
 	}
 	void push() {
@@ -83,12 +83,13 @@ public:
 	}
 	void wypiszNajlepszyPrzedzial() const {
 		const przedzial& p = v[maksima.topId()];
-		cout << p.l + 1 << " " << p.r + 1 << "\n"; // poniewaz liczymy od 1 (nie od 0)
+		cout << p.l + 1 << " " << p.r + 1 << "\n"; // ponieważ liczymy od 1 (nie od 0)
 	}
-	void wrzucPrzedzialDoVec(vector<przedzial>& vecPrzedzialow) const { // jakosc podnosze do kwadratu, aby uniknac pierwiastka
+	void wrzucPrzedzialDoVec(vector<przedzial>& vecPrzedzialow) const {
 		assert(L <= R);
 		int dlugosc = R - L + 1;
 		long long dx = v[R].x - v[L].x;
+		// jakość podnoszę do kwadratu, aby uniknać pierwiastka
 		double jakosc = pow(dx, 2) / static_cast<double>(dlugosc);
 		vecPrzedzialow.emplace_back(L, R, jakosc);
 	}
@@ -122,13 +123,13 @@ vector<przedzial> wygenerujPrzedzialy(int u, const vector<punkt>& vecPunktow) {
 	return vecPrzedzialow;
 }
 
-int main() {	// za długie
+int main() {
 	ios_base::sync_with_stdio(0); 
 	cin.tie(0);
 
 	int n, u;
 	cin >> n >> u;
-	u++; // przydaloby sie slowo komentarza
+	u++; // zwiększamy U o jeden, ponieważ korzystamy z ostrych nierówności
 	vector<punkt> punkty = wczytajWejscie(n);
 	vector<przedzial> scislePrzedzialy = wygenerujPrzedzialy(u, punkty); // (sic!) nie robi kopii
 	
@@ -138,15 +139,19 @@ int main() {	// za długie
 	assert(scislePrzedzialy[rozmiarVektora - 1].r == n-1);
 
 	int indexFirstToPush = 0, indexFirstToPop = 0;
-	KolejkaPrzedzialy<przedzial> kolejka(scislePrzedzialy);  // daj jakiś komentarz co się tu dzieje
+	KolejkaPrzedzialy<przedzial> kolejka(scislePrzedzialy);
+	// dla każdego punktu chcemy wypisać najlepszy przedział
 	for(int i = 0; i < n; i++) {
+		// jeżeli na tym indeksie rozpoczyna się nowy przedział, to go wpychamy na kolejke (*)
 		if(indexFirstToPush < rozmiarVektora && i == scislePrzedzialy[indexFirstToPush].l) {
 			kolejka.push();
 			indexFirstToPush++;
 		}
 
+		// autodeskryptywna metoda
 		kolejka.wypiszNajlepszyPrzedzial();
 
+		// * analogicznie jak się jakiś kończy
 		if(indexFirstToPop < rozmiarVektora && i == scislePrzedzialy[indexFirstToPop].r) {
 			kolejka.pop();
 			indexFirstToPop++;
