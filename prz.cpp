@@ -39,19 +39,19 @@ public:
 		assert(dq.size());
 		return dq.front().id;
 	}
-	void push(T t, int id) { /// MW jednoliterowe nazwy 
-		while(dq.size() && komp(t, dq.back().wart)) 
+	void push(T wart, int id) {
+		while(dq.size() && komp(wart, dq.back().wart)) 
 			dq.pop_back();
 
-		dq.emplace_back(t, id);
+		dq.emplace_back(wart, id);
 	}
 	void pop(int id) {
 		assert(dq.size());
 		if(id == topId())
 			dq.pop_front();
 	}
-	bool isPushable(T t) const { // sprawdza czy kolejny punkt jest większy od maksimum minus U
-		return dq.empty() || komp(t, dq.front().wart - U);
+	bool isPushable(T wart) const { // sprawdza czy kolejny punkt jest większy od maksimum minus U
+		return dq.empty() || komp(wart, dq.front().wart - U);
 	}
 };
 
