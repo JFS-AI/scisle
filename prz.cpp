@@ -85,9 +85,9 @@ public:
 		minima.push(v[R].wartoscDoPorownan(), R);
 		maksima.push(v[R].wartoscDoPorownan(), R);
 	}
-	void wypiszNajlepszyPrzedzial() const {
+	pair<int, int> zwrocNajlepszyPrzedzial() const {
 		const przedzial& p = v[maksima.topId()];
-		cout << p.l + 1 << " " << p.r + 1 << "\n"; // ponieważ liczymy od 1 (nie od 0)
+		return {p.l + 1, p.r + 1}; // ponieważ liczymy od 1 (nie od 0)
 	}
 	void wrzucPrzedzialDoVec(vector<przedzial>& vecPrzedzialow) const {
 		assert(L <= R);
@@ -127,6 +127,32 @@ vector<przedzial> wygenerujPrzedzialy(int u, const vector<punkt>& vecPunktow) {
 	return vecPrzedzialow;
 }
 
+vector<pair<int, int>> solve(const int n, const vector<przedzial>& przedzialy) {
+	const int rozmiarVektora = static_cast<int>(przedzialy.size());
+	vector<pair<int, int>> acc;
+	acc.reserve(n);
+	int indexFirstToPush = 0, indexFirstToPop = 0;
+	KolejkaPrzedzialy<przedzial> kolejka(przedzialy);
+	// dla każdego punktu chcemy wypisać najlepszy przedział
+	for(int i = 0; i < n; i++) {
+		// jeżeli na tym indeksie rozpoczyna się nowy przedział, to go wpychamy na kolejke (*)
+		if(indexFirstToPush < rozmiarVektora && i == przedzialy[indexFirstToPush].l) {
+			kolejka.push();
+			indexFirstToPush++;
+		}
+
+		// autodeskryptywna metoda
+		acc.emplace_back(kolejka.zwrocNajlepszyPrzedzial());
+
+		// * analogicznie jak się jakiś kończy
+		if(indexFirstToPop < rozmiarVektora && i == przedzialy[indexFirstToPop].r) {
+			kolejka.pop();
+			indexFirstToPop++;
+		}
+	}
+	return acc;
+}
+
 int main() {
 	ios_base::sync_with_stdio(0); 
 	cin.tie(0);
@@ -136,30 +162,15 @@ int main() {
 	u++; // zwiększamy U o jeden, ponieważ korzystamy z ostrych nierówności
 	vector<punkt> punkty = wczytajWejscie(n);
 	vector<przedzial> scislePrzedzialy = wygenerujPrzedzialy(u, punkty); // (sic!) nie robi kopii
-	
-	const int rozmiarVektora = static_cast<int>(scislePrzedzialy.size());
 
 	assert(scislePrzedzialy[0].l == 0);
-	assert(scislePrzedzialy[rozmiarVektora - 1].r == n-1);
+	assert(scislePrzedzialy[scislePrzedzialy.size() - 1].r == n-1);
 
-	int indexFirstToPush = 0, indexFirstToPop = 0;
-	KolejkaPrzedzialy<przedzial> kolejka(scislePrzedzialy);
-	// dla każdego punktu chcemy wypisać najlepszy przedział
-	for(int i = 0; i < n; i++) {
-		// jeżeli na tym indeksie rozpoczyna się nowy przedział, to go wpychamy na kolejke (*)
-		if(indexFirstToPush < rozmiarVektora && i == scislePrzedzialy[indexFirstToPush].l) {
-			kolejka.push();
-			indexFirstToPush++;
-		}
+	vector<pair<int, int>> wynik = solve(n, scislePrzedzialy);
 
-		// autodeskryptywna metoda
-		kolejka.wypiszNajlepszyPrzedzial();
-
-		// * analogicznie jak się jakiś kończy
-		if(indexFirstToPop < rozmiarVektora && i == scislePrzedzialy[indexFirstToPop].r) {
-			kolejka.pop();
-			indexFirstToPop++;
-		}
+	for(auto [l, r] : wynik) {
+		cout << l << " " << r << "\n";
 	}
+
 	return 0;
 }
