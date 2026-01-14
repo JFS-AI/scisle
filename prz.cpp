@@ -20,9 +20,11 @@ struct przedzial {
 	const auto wartoscDoPorownan() const { return jakosc; }
 };
 
+// to jest tak naprawde kolejka-kmax - w czasie O(1) zwraca maksimum
+
 template <typename T, typename Komparator>
 requires strict_weak_order<Komparator, T, T>
-class MonotonicznaDeque { // MW jakiś komentarz jak działa ta klasa?
+class MonotonicznaDeque {
 	struct Element {
 		T wart;
 		int id;
@@ -55,9 +57,11 @@ public:
 	}
 };
 
+// rozbudowanie kolejki-kmax
+
 template<typename T>
-class KolejkaPrzedzialy { // trzeba nazwe zmienic // MW już nie trzeba
-	int R = -1, L = 0; // MW ditto, komentarz jak działa ta klasa
+class KolejkaPrzedzialy {
+	int R = -1, L = 0;
 	using TypWartosci = decltype(declval<T>().wartoscDoPorownan());
 	MonotonicznaDeque<TypWartosci, less<TypWartosci>> minima;
 	MonotonicznaDeque<TypWartosci, greater<TypWartosci>> maksima;
@@ -97,16 +101,16 @@ public:
 
 vector<punkt> wczytajWejscie(int n) {
 	vector<punkt> v;
-	v.reserve(n); // MW nie lepiej po prostu zrobić vector<punkt> v(n); ?
+	v.reserve(n);
 	for(int i = 0; i < n; i++) {
 		int x, y;
-		cin >> x >> y; // MW a tutaj cin >> v[i].x >> v[i].y;
+		cin >> x >> y;
 		v.emplace_back(x, y);
 	}
 	return v;
 }
 
-vector<przedzial> wygenerujPrzedzialy(int u, const vector<punkt>& vecPunktow) { // MW jakiś komentarz po co to
+vector<przedzial> wygenerujPrzedzialy(int u, const vector<punkt>& vecPunktow) {
 	KolejkaPrzedzialy<punkt> k(vecPunktow, u);
 	vector<przedzial> vecPrzedzialow;
 	for(punkt p : vecPunktow) {
